@@ -1,0 +1,331 @@
+<html>
+<head>
+<title>main.c</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(187,181,41); }
+.s1 { color: rgb(106,135,89); }
+.s2 { color: rgb(169,183,198); }
+.s3 { color: rgb(128,128,128); }
+.s4 { color: rgb(104,151,187); }
+.s5 { color: rgb(204,120,50); font-weight: bold; }
+.s6 { color: rgb(204,120,50); }
+</style>
+</head>
+<BODY BGCOLOR="#2b2b2b">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+main.c</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">#include</span><span class="s1"> &lt;stdio.h&gt;</span><span class="s2"> 
+</span><span class="s0">#include</span><span class="s1"> &lt;stdlib.h&gt;</span><span class="s2"> 
+</span><span class="s0">#include</span><span class="s1"> &lt;string.h&gt;</span><span class="s2"> 
+</span><span class="s0">#include</span><span class="s1"> &lt;ctype.h&gt;</span><span class="s2"> 
+ 
+</span><span class="s0">#define </span><span class="s2">FILENAME </span><span class="s1">&quot;kniznica.txt&quot;     </span><span class="s3">//zmena retazca &quot;kniznica.txt&quot; za slovo FILENAME</span><span class="s2"> 
+</span><span class="s0">#define </span><span class="s2">VELKOST_SIGNATURA </span><span class="s4">10</span><span class="s2">+</span><span class="s4">2      </span><span class="s3">//konstanta s velkostou retazca signatura</span><span class="s2"> 
+</span><span class="s0">#define </span><span class="s2">VELKOST_ISBN </span><span class="s4">14</span><span class="s2">+</span><span class="s4">2           </span><span class="s3">//konstanta s velkostou retazca ISBN</span><span class="s2"> 
+</span><span class="s0">#define </span><span class="s2">VELKOST_NAZOV_KNIHY </span><span class="s4">100</span><span class="s2">+</span><span class="s4">2   </span><span class="s3">//konstanta s velkostou retazca nazovKnihy</span><span class="s2"> 
+</span><span class="s0">#define </span><span class="s2">VELKOST_AUTORI </span><span class="s4">100</span><span class="s2">+</span><span class="s4">2        </span><span class="s3">//konstanta s velkostou retazca autori</span><span class="s2"> 
+ 
+</span><span class="s5">typedef struct </span><span class="s2">kniznica                             </span><span class="s3">//definovanie struktury s nazvom potraviny a datovym typom KNIZNICA</span><span class="s2"> 
+{ 
+    </span><span class="s5">char </span><span class="s2">signatura[VELKOST_SIGNATURA+</span><span class="s4">1</span><span class="s2">]</span><span class="s6">;    </span><span class="s3">//deklaracia retazca signatura</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">ISBN[VELKOST_ISBN+</span><span class="s4">1</span><span class="s2">]</span><span class="s6">;              </span><span class="s3">//deklaracia retazca ISBN</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">nazovKnihy[VELKOST_NAZOV_KNIHY+</span><span class="s4">1</span><span class="s2">]</span><span class="s6">; </span><span class="s3">//deklaracia retazca nazovKnihy</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">autori[VELKOST_AUTORI+</span><span class="s4">1</span><span class="s2">]</span><span class="s6">;          </span><span class="s3">//deklaracia retazca autori</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">datumVypozicania</span><span class="s6">;                   </span><span class="s3">//deklaracia celociselnej premennej datumVypozicania</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">cisloPreukazu</span><span class="s6">;                      </span><span class="s3">//deklaracia celociselnej premennej cisloPreukazu</span><span class="s2"> 
+    </span><span class="s5">struct </span><span class="s2">kniznica *dalsia</span><span class="s6">;                </span><span class="s3">//deklaracia smernika na dalsi prvok v spajanom zozname struktur</span><span class="s2"> 
+}KNIZNICA</span><span class="s6">;</span><span class="s2"> 
+</span><span class="s5">void </span><span class="s2">dealokaciaUdaje(KNIZNICA **prvyZaznam)         </span><span class="s3">//funkcia s nazvom dealokaciaUdaje</span><span class="s2"> 
+{ 
+    KNIZNICA *aktualnyZaznam=NULL</span><span class="s6">;  </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+    KNIZNICA *predchZaznam=NULL</span><span class="s6">;    </span><span class="s3">//deklaracia smernika na struktury s nazvom predchZaznam</span><span class="s2"> 
+ 
+    aktualnyZaznam=*prvyZaznam</span><span class="s6">;     </span><span class="s3">//priradenie smerniku aktualnyZaznam adresu smernika prvyZaznam ukazujuceho na strukturu</span><span class="s2"> 
+    </span><span class="s5">while</span><span class="s2">(aktualnyZaznam!=NULL)     </span><span class="s3">//dokial sa smernik aktualnyZaznam nebude rovnat NULL</span><span class="s2"> 
+    { 
+        aktualnyZaznam=aktualnyZaznam-&gt;dalsia</span><span class="s6">;  </span><span class="s3">//priradenie adrese smernika aktualnyZaznam adresu na ktoru ukazuje smernik dalsia</span><span class="s2"> 
+        free(predchZaznam)</span><span class="s6">;                     </span><span class="s3">//uvolnenie pamate pre predchZaznam</span><span class="s2"> 
+        predchZaznam=aktualnyZaznam</span><span class="s6">;            </span><span class="s3">//adrese smernika predchZaznam priradm adresu mernika aktalnyZaznam</span><span class="s2"> 
+    } 
+    *prvyZaznam=NULL</span><span class="s6">;               </span><span class="s3">//priradenie smerniku prvyZaznam NULL</span><span class="s2"> 
+} 
+</span><span class="s5">void </span><span class="s2">nacitajUdaje(FILE *fr</span><span class="s6">, </span><span class="s2">KNIZNICA **prvyZaznam)  </span><span class="s3">//funkcia s nazvom nacitajUdaje</span><span class="s2"> 
+{ 
+    KNIZNICA *aktualnyZaznam=NULL</span><span class="s6">;      </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">pocetStruktur=</span><span class="s4">0</span><span class="s6">;                </span><span class="s3">//delkaracia celociselnej premennej pocetStruktur</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">retazec[</span><span class="s4">4</span><span class="s2">]</span><span class="s6">;                    </span><span class="s3">//deklaracia retazca retazec</span><span class="s2"> 
+ 
+    rewind(fr)</span><span class="s6">;                         </span><span class="s3">//posunutie kurzora na zaciatok suboru</span><span class="s2"> 
+    dealokaciaUdaje(prvyZaznam)</span><span class="s6">;        </span><span class="s3">//zavolanie funkcie dealokaciaUdaje</span><span class="s2"> 
+    </span><span class="s5">while</span><span class="s2">((fscanf(fr</span><span class="s6">,</span><span class="s1">&quot;%s&quot;</span><span class="s6">,</span><span class="s2">retazec))!=EOF)   </span><span class="s3">//dokial retazec s nazvom retazec nenarazi na koniec subora</span><span class="s2"> 
+    { 
+        </span><span class="s5">if</span><span class="s2">(strcmp(retazec</span><span class="s6">,</span><span class="s1">&quot;---&quot;</span><span class="s2">)==</span><span class="s4">0</span><span class="s2">)        </span><span class="s3">//ak sa retazec rovna &quot;---&quot;</span><span class="s2"> 
+        { 
+            fgetc(fr)</span><span class="s6">;                      </span><span class="s3">//zober jeden znak zo suboru predstavujuci znak '\n'</span><span class="s2"> 
+            ++pocetStruktur</span><span class="s6">;                </span><span class="s3">//povysenie premennej pocetStruktur</span><span class="s2"> 
+            </span><span class="s5">if</span><span class="s2">(*prvyZaznam==NULL)           </span><span class="s3">//ak sa smernik prvyZaznam rovna NULL</span><span class="s2"> 
+            { 
+                *prvyZaznam=(KNIZNICA*)malloc(</span><span class="s5">sizeof</span><span class="s2">(KNIZNICA))</span><span class="s6">;        </span><span class="s3">//program alokuje pamat pre smernik prvyZaznam o velkosti typu KNIZNICA</span><span class="s2"> 
+                fgets((*prvyZaznam)-&gt;signatura</span><span class="s6">,</span><span class="s2">VELKOST_SIGNATURA</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;   </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_SIGNATURA a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+                fgets((*prvyZaznam)-&gt;ISBN</span><span class="s6">,</span><span class="s2">VELKOST_ISBN</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;             </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_ISBN a ulozi ho do retazca ISBN v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+                fgets((*prvyZaznam)-&gt;nazovKnihy</span><span class="s6">,</span><span class="s2">VELKOST_NAZOV_KNIHY</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;</span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_NAZOV_KNIHY a ulozi ho do retazca nazovKnihy v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+                fgets((*prvyZaznam)-&gt;autori</span><span class="s6">,</span><span class="s2">VELKOST_AUTORI</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;         </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_AUTORI a ulozi ho do retazca autori v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+                fscanf(fr</span><span class="s6">,</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;(*prvyZaznam)-&gt;datumVypozicania)</span><span class="s6">;       </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej datumVypozicania v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+                fscanf(fr</span><span class="s6">,</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;(*prvyZaznam)-&gt;cisloPreukazu)</span><span class="s6">;          </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej cisloPreukazu v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+                aktualnyZaznam=*prvyZaznam</span><span class="s6">;                             </span><span class="s3">//adrese smernika aktualnyZaznam sa priradi adresa smernnika prvyZaznam</span><span class="s2"> 
+            } 
+            </span><span class="s5">else                           </span><span class="s3">//ak sa vyskitne ina moznost aka je v if</span><span class="s2"> 
+            { 
+                aktualnyZaznam=aktualnyZaznam-&gt;dalsia=(KNIZNICA*)malloc(</span><span class="s5">sizeof</span><span class="s2">(KNIZNICA))</span><span class="s6">;  </span><span class="s3">//program alokuje pamat pre smernik aktualnyZaznam o velkosti typu KNIZNICA</span><span class="s2"> 
+                fgets(aktualnyZaznam-&gt;signatura</span><span class="s6">,</span><span class="s2">VELKOST_SIGNATURA</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;                      </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_SIGNATURA a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                fgets(aktualnyZaznam-&gt;ISBN</span><span class="s6">,</span><span class="s2">VELKOST_ISBN</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;                                </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_ISBN a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                fgets(aktualnyZaznam-&gt;nazovKnihy</span><span class="s6">,</span><span class="s2">VELKOST_NAZOV_KNIHY</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;                   </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_NAZOV_KNIHY a ulozi ho do retazca nazovKnihy v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                fgets(aktualnyZaznam-&gt;autori</span><span class="s6">,</span><span class="s2">VELKOST_AUTORI</span><span class="s6">,</span><span class="s2">fr)</span><span class="s6">;                            </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_AUTORI a ulozi ho do retazca autori v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                fscanf(fr</span><span class="s6">,</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;aktualnyZaznam-&gt;datumVypozicania)</span><span class="s6">;                          </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej datumVypozicania v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                fscanf(fr</span><span class="s6">,</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;aktualnyZaznam-&gt;cisloPreukazu)</span><span class="s6">;                             </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej cisloPreukazu v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                aktualnyZaznam-&gt;dalsia=NULL</span><span class="s6">;                                                </span><span class="s3">//priradenie smerniku v strukture na ktoru ukazuje smernik aktualnyZaznam hodnotu NULL</span><span class="s2"> 
+            } 
+        } 
+    } 
+    </span><span class="s5">if</span><span class="s2">(pocetStruktur==</span><span class="s4">0</span><span class="s2">)printf(</span><span class="s1">&quot;Zaznamy neboli nacitane</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s2">)</span><span class="s6">;    </span><span class="s3">//ak sa v subore nenachadza ziadny zaznam program vypise na obrazovku &quot;Zaznamy neboli nacitane&quot;</span><span class="s2"> 
+    </span><span class="s5">else </span><span class="s2">printf(</span><span class="s1">&quot;Nacitalo sa %d zaznamov</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">pocetStruktur)</span><span class="s6">;     </span><span class="s3">//ak sa if nevykonal program vypise na obrazovku kolko zaznamov sa nacitalo</span><span class="s2"> 
+} 
+</span><span class="s5">void </span><span class="s2">vypisUdaje(KNIZNICA *prvyZaznam)               </span><span class="s3">//funkcia s nazvom vypisUdaje</span><span class="s2"> 
+{ 
+    </span><span class="s5">int </span><span class="s2">pocet=</span><span class="s4">0</span><span class="s6">;                        </span><span class="s3">//deklaracia celociselnej premennej pocet</span><span class="s2"> 
+    KNIZNICA *aktualnyZaznam=NULL</span><span class="s6">;      </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+ 
+    aktualnyZaznam=prvyZaznam</span><span class="s6">;          </span><span class="s3">//adrese smernika aktualnyZaznam sa priradi adresa smernika prvyZaznam</span><span class="s2"> 
+    </span><span class="s5">while</span><span class="s2">(aktualnyZaznam!=NULL)         </span><span class="s3">//dokial sa smernik aktualnyZaznam nerovna NULL</span><span class="s2"> 
+    { 
+        printf(</span><span class="s1">&quot;%d.</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">++pocet)</span><span class="s6">;        </span><span class="s3">//program napise na obrazovku poradie nacitaneho zaznamu</span><span class="s2"> 
+        printf(</span><span class="s1">&quot;signatura: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;signatura)</span><span class="s6">;      </span><span class="s3">//program vypise na obrazovku retazec signaturu v danom zazname</span><span class="s2"> 
+        printf(</span><span class="s1">&quot;isbn: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;ISBN)</span><span class="s6">;                </span><span class="s3">//program vypise na obrazovku retazec ISBN v danom zazname</span><span class="s2"> 
+        printf(</span><span class="s1">&quot;nazov: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;nazovKnihy)</span><span class="s6">;         </span><span class="s3">//program vypise na obrazovku retazec nazovKnihy v danom zazname</span><span class="s2"> 
+        printf(</span><span class="s1">&quot;autori: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;autori)</span><span class="s6">;            </span><span class="s3">//program vypise na obrazovku retazec autori v danom zazname</span><span class="s2"> 
+        printf(</span><span class="s1">&quot;datum: %d</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;datumVypozicania)</span><span class="s6">; </span><span class="s3">//program vypise na obrazovku premennu datum v danom zazname</span><span class="s2"> 
+        printf(</span><span class="s1">&quot;preukaz: %d</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;cisloPreukazu)</span><span class="s6">;  </span><span class="s3">//program vypise na obrazovku premennu preukaz v danom zazname</span><span class="s2"> 
+        aktualnyZaznam=aktualnyZaznam-&gt;dalsia</span><span class="s6">;                  </span><span class="s3">//posunutie smernika v spajanom zozname struktur o jedno miesto</span><span class="s2"> 
+    } 
+} 
+</span><span class="s5">void </span><span class="s2">pridajUdaje(KNIZNICA **prvyZaznam)             </span><span class="s3">//funkcia s nazvom pridajUdaje</span><span class="s2"> 
+{ 
+    KNIZNICA *predchZaznam=NULL</span><span class="s6">;            </span><span class="s3">//deklaracia smernika na struktury s nazvom predchZaznam</span><span class="s2"> 
+    KNIZNICA *aktualnyZaznam=NULL</span><span class="s6">;          </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+    KNIZNICA *novyZaznam=NULL</span><span class="s6">;              </span><span class="s3">//deklaracia smernika na struktury s nazvom novyZaznam</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">pozicia=</span><span class="s4">0</span><span class="s6">;                          </span><span class="s3">//deklaracia celociselnej premennej pozicia a jej inicializacia na hodnotu nula</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">pocet=</span><span class="s4">1</span><span class="s6">;                            </span><span class="s3">//deklaracia celociselnej premennej pocet a jej inicializacia na hodnotu jedna</span><span class="s2"> 
+ 
+    scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;pozicia)</span><span class="s6">;                   </span><span class="s3">//nacitanie premennej pozicia z klavesnice</span><span class="s2"> 
+    getchar()</span><span class="s6">;                              </span><span class="s3">//funkcia pre znak pre novy riadok 'ENTER'</span><span class="s2"> 
+    </span><span class="s5">if</span><span class="s2">(pozicia&gt;</span><span class="s4">0</span><span class="s2">)                           </span><span class="s3">//ak je velkost premennej pozicia vacsi ako nula</span><span class="s2"> 
+    { 
+        </span><span class="s5">if</span><span class="s2">(*prvyZaznam!=NULL)               </span><span class="s3">//ak smernik prvyZaznam neukazuje na NULL</span><span class="s2"> 
+        { 
+            novyZaznam=(KNIZNICA*)malloc(</span><span class="s5">sizeof</span><span class="s2">(KNIZNICA))</span><span class="s6">;         </span><span class="s3">//program alokuje pamat pre smernik novyZaznam o velkosti typu KNIZNICA</span><span class="s2"> 
+            fgets(novyZaznam-&gt;signatura</span><span class="s6">,</span><span class="s2">VELKOST_SIGNATURA</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;   </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_SIGNATURA a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik novyZaznam</span><span class="s2"> 
+            fgets(novyZaznam-&gt;ISBN</span><span class="s6">,</span><span class="s2">VELKOST_ISBN</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;             </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_ISBN a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik novyZaznam</span><span class="s2"> 
+            fgets(novyZaznam-&gt;nazovKnihy</span><span class="s6">,</span><span class="s2">VELKOST_NAZOV_KNIHY</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;</span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_NAZOV_KNIHY a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik novyZaznam</span><span class="s2"> 
+            fgets(novyZaznam-&gt;autori</span><span class="s6">,</span><span class="s2">VELKOST_AUTORI</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;         </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_AUTORI a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik novyZaznam</span><span class="s2"> 
+            scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;novyZaznam-&gt;datumVypozicania)</span><span class="s6">;              </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej datumVypozicania v strukture na ktoru ukazuje smernik novyZaznam</span><span class="s2"> 
+            scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;novyZaznam-&gt;cisloPreukazu)</span><span class="s6">;                 </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej cisloPreukazu v strukture na ktoru ukazuje smernik novyZaznam</span><span class="s2"> 
+            novyZaznam-&gt;dalsia=NULL</span><span class="s6">;                                </span><span class="s3">//priradenie smerniku v strukture na ktoru ukazuje smernik novyZaznam hodnotu NULL</span><span class="s2"> 
+            predchZaznam=aktualnyZaznam=*prvyZaznam</span><span class="s6">;                </span><span class="s3">//adrese smernika predchZaznam a aktualnyZaznam sa priradi adresa smernika prvyZaznam</span><span class="s2"> 
+            </span><span class="s5">while</span><span class="s2">(aktualnyZaznam!=NULL)                 </span><span class="s3">//dokial sa smernik aktualnyZaznam nerovna NULL</span><span class="s2"> 
+            { 
+                </span><span class="s5">if</span><span class="s2">(pozicia==</span><span class="s4">1</span><span class="s2">)                          </span><span class="s3">//ak sa pozicia rovna nule</span><span class="s2"> 
+                { 
+                    novyZaznam-&gt;dalsia=*prvyZaznam</span><span class="s6">;     </span><span class="s3">//smernik v strukture dalsia na ktoru ukazuje smernik novyZaznam sa rovna adrese na ktoru ukazuje prvyZaznam</span><span class="s2"> 
+                    aktualnyZaznam=*prvyZaznam</span><span class="s6">;         </span><span class="s3">//adresa aktualnehoZaznamu sa rovna adrese prvehoZaznamu</span><span class="s2"> 
+                    *prvyZaznam=novyZaznam</span><span class="s6">;             </span><span class="s3">//adresa prvehoZaznamu sa rovna adrese novehoZaznamu</span><span class="s2"> 
+                    </span><span class="s5">break</span><span class="s6">;                              </span><span class="s3">//ukonci sa cyklus while</span><span class="s2"> 
+                } 
+                </span><span class="s5">if</span><span class="s2">(pocet==pozicia)                      </span><span class="s3">//ak sa pozicia rovna poctu</span><span class="s2"> 
+                { 
+                    predchZaznam-&gt;dalsia=novyZaznam</span><span class="s6">;    </span><span class="s3">//smernik v strukture dalsia na ktoru ukazuje smernik predchZaznam sa rovna adrese na ktoru ukazuje novyZaznam</span><span class="s2"> 
+                    novyZaznam-&gt;dalsia=aktualnyZaznam</span><span class="s6">;  </span><span class="s3">//smernik v strukture dalsia na ktoru ukazuje smernik novyZaznam sa rovna adrese na ktoru ukazuje aktualnyZaznam</span><span class="s2"> 
+                    </span><span class="s5">break</span><span class="s6">;                              </span><span class="s3">//ukonci sa cyklus while</span><span class="s2"> 
+                } 
+                predchZaznam=aktualnyZaznam</span><span class="s6">;            </span><span class="s3">//adresa pedchZaznamu sa rovna adrese aktualnehoZaznamu</span><span class="s2"> 
+                aktualnyZaznam=aktualnyZaznam-&gt;dalsia</span><span class="s6">;  </span><span class="s3">//adresa aktualnehoZaznamu sa rovna smerniku dalsia v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                predchZaznam-&gt;dalsia=aktualnyZaznam</span><span class="s6">;    </span><span class="s3">//smernik v strukture dalsia na ktoru ukazuje smernik predchZaznam sa rovna adrese na ktoru ukazuje aktualnyZaznam</span><span class="s2"> 
+                ++pocet</span><span class="s6">;</span><span class="s2"> 
+            } 
+            </span><span class="s5">if</span><span class="s2">(aktualnyZaznam==NULL)                </span><span class="s3">//ak sa smernik aktualnyZaznam rovna NULL</span><span class="s2"> 
+            { 
+                aktualnyZaznam=novyZaznam</span><span class="s6">;          </span><span class="s3">//adresa aktualnehoZaznamu sa rovna adrese novehoZaznamu</span><span class="s2"> 
+                predchZaznam-&gt;dalsia=aktualnyZaznam</span><span class="s6">;</span><span class="s3">//smernik v strukture dalsia na ktoru ukazuje smernik predchZaznam sa rovna adrese na ktoru ukazuje aktualnyZaznam</span><span class="s2"> 
+            } 
+        } 
+        </span><span class="s5">if</span><span class="s2">(*prvyZaznam==NULL)   </span><span class="s3">//ak smernik prvyZaznam ukazuje na NULL</span><span class="s2"> 
+        { 
+            *prvyZaznam=(KNIZNICA*)malloc(</span><span class="s5">sizeof</span><span class="s2">(KNIZNICA))</span><span class="s6">;            </span><span class="s3">//program alokuje pamat pre smernik novyZaznam o velkosti typu KNIZNICA</span><span class="s2"> 
+            fgets((*prvyZaznam)-&gt;signatura</span><span class="s6">,</span><span class="s2">VELKOST_SIGNATURA</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;    </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_SIGNATURA a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+            fgets((*prvyZaznam)-&gt;ISBN</span><span class="s6">,</span><span class="s2">VELKOST_ISBN</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;              </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_ISBN a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+            fgets((*prvyZaznam)-&gt;nazovKnihy</span><span class="s6">,</span><span class="s2">VELKOST_NAZOV_KNIHY</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">; </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_NAZOV_KNIHY a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+            fgets((*prvyZaznam)-&gt;autori</span><span class="s6">,</span><span class="s2">VELKOST_AUTORI</span><span class="s6">,</span><span class="s2">stdin)</span><span class="s6">;          </span><span class="s3">//nacita zo suboru riadok do velkosti konstanty VELKOST_AUTORI a ulozi ho do retazca signatura v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+            scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;(*prvyZaznam)-&gt;datumVypozicania)</span><span class="s6">;               </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej datumVypozicania v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+            scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;(*prvyZaznam)-&gt;cisloPreukazu)</span><span class="s6">;                  </span><span class="s3">//nacita cislo zo suboru a ulozi ho do premenej cisloPreukazu v strukture na ktoru ukazuje smernik prvyZaznam</span><span class="s2"> 
+            (*prvyZaznam)-&gt;dalsia=NULL</span><span class="s6">;                                 </span><span class="s3">//priradenie smerniku v strukture na ktoru ukazuje smernik prvyZaznam hodnotu NULL</span><span class="s2"> 
+        } 
+    } 
+} 
+</span><span class="s5">void </span><span class="s2">zmazUdaje(KNIZNICA **prvyZaznam)               </span><span class="s3">//funkcia s nazvom zmazUdaje</span><span class="s2"> 
+{ 
+    KNIZNICA *predchZaznam=NULL</span><span class="s6">;            </span><span class="s3">//deklaracia smernika na struktury s nazvom predchZaznam</span><span class="s2"> 
+    KNIZNICA *aktualnyZaznam=NULL</span><span class="s6">;          </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+    KNIZNICA *temp=NULL</span><span class="s6">;                    </span><span class="s3">//deklaracia smernika na struktury s nazvom temp</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">hladanyRetazec[VELKOST_AUTORI]</span><span class="s6">;    </span><span class="s3">//deklaracia retazca z nazvom hladanyRetazec velkosti konstanty VELKOST_AUTORI</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">autorTemp[VELKOST_AUTORI]</span><span class="s6">;         </span><span class="s3">//deklaracia retazca z nazvom autorTemp velkosti konstanty VELKOST_AUTORI</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">pocet=</span><span class="s4">0</span><span class="s6">;                            </span><span class="s3">//deklaracia celociselnej premennej pocet a jej nasledne inicializovanie na nula</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">i</span><span class="s6">;                                  </span><span class="s3">//deklaracia pocitadla prveho stupna</span><span class="s2"> 
+ 
+    scanf(</span><span class="s1">&quot;%s&quot;</span><span class="s6">,</span><span class="s2">hladanyRetazec)</span><span class="s6">;                 </span><span class="s3">//nacitanie retazca hladanyRetazec z klavesnice</span><span class="s2"> 
+    predchZaznam=aktualnyZaznam=*prvyZaznam</span><span class="s6">;    </span><span class="s3">//adrese smernika predchZaznam a aktualnyZaznam sa priradi adresa smernika prvyZaznam</span><span class="s2"> 
+    </span><span class="s5">while</span><span class="s2">(aktualnyZaznam!=NULL)                 </span><span class="s3">//dokial sa smernik aktualnyZaznam nerovna NULL</span><span class="s2"> 
+    { 
+        strcpy(autorTemp</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;autori)</span><span class="s6">;   </span><span class="s3">//volanie funkcie strcpy ktora nakopiruje do danej struktury autori retazec autorTemp</span><span class="s2"> 
+        </span><span class="s5">for</span><span class="s2">(i=</span><span class="s4">0</span><span class="s6">;</span><span class="s2">hladanyRetazec[i]</span><span class="s6">;</span><span class="s2">++i)              </span><span class="s3">//vsetky velke pismena v retazci hladanyRetazec zmeni na male</span><span class="s2"> 
+        { 
+            hladanyRetazec[i]=(</span><span class="s5">char</span><span class="s2">)tolower(hladanyRetazec[i])</span><span class="s6">;</span><span class="s2"> 
+        } 
+        </span><span class="s5">for</span><span class="s2">(i=</span><span class="s4">0</span><span class="s6">;</span><span class="s2">autorTemp[i]</span><span class="s6">;</span><span class="s2">++i)                   </span><span class="s3">//vsetky velke pismena v retazci autorTemp zmeni na male</span><span class="s2"> 
+        { 
+            autorTemp[i]=(</span><span class="s5">char</span><span class="s2">)tolower(autorTemp[i])</span><span class="s6">;</span><span class="s2"> 
+        } 
+        </span><span class="s5">if</span><span class="s2">(strstr(autorTemp</span><span class="s6">,</span><span class="s2">hladanyRetazec)!=NULL)  </span><span class="s3">//ak sa podretazec autorTemp nachadza v retazci hladany retazec</span><span class="s2"> 
+        { 
+            </span><span class="s5">if </span><span class="s2">(aktualnyZaznam==*prvyZaznam)    </span><span class="s3">//ak sa adresa smernika aktualnyZaznam rovna adrese smernika prvyZaznam</span><span class="s2"> 
+            { 
+                temp=*prvyZaznam</span><span class="s6">;               </span><span class="s3">//adresa smernika temp sa rovna adrese smernika prvyZaznam</span><span class="s2"> 
+                *prvyZaznam=temp-&gt;dalsia</span><span class="s6">;       </span><span class="s3">//adresa prvehoZaznamu sa rovna smerniku dalsia v strukture na ktoru ukazuje smernik temp</span><span class="s2"> 
+                free(temp)</span><span class="s6">;                     </span><span class="s3">//uvolnenie pamate na ktoru ukazuje smernik temp</span><span class="s2"> 
+                aktualnyZaznam=*prvyZaznam</span><span class="s6">;     </span><span class="s3">//adresa smernika aktualnyZaznam sa rovna adrese smernika prvyZaznam</span><span class="s2"> 
+            } 
+            </span><span class="s5">else    </span><span class="s3">//ak if neprebehne</span><span class="s2"> 
+            { 
+                predchZaznam-&gt;dalsia=aktualnyZaznam-&gt;dalsia</span><span class="s6">;    </span><span class="s3">//adresa smerniku dalsia v strukture na ktoru ukazuje smernik predchZaznam sa rovna adrese smernika dalsia v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                free(aktualnyZaznam)</span><span class="s6">;                           </span><span class="s3">//uvolnenie pamate na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+                aktualnyZaznam=predchZaznam-&gt;dalsia</span><span class="s6">;            </span><span class="s3">//adresa aktualnehoZaznamu sa rovna smerniku dalsia v strukture na ktoru ukazuje smernik predchZaznam</span><span class="s2"> 
+            } 
+            ++pocet</span><span class="s6">;        </span><span class="s3">//povysenie premennej pocet o jedna</span><span class="s2"> 
+        } 
+        </span><span class="s5">else                                        </span><span class="s3">//ak neprebehne if</span><span class="s2"> 
+        { 
+            predchZaznam=aktualnyZaznam</span><span class="s6">;            </span><span class="s3">//adresa v smerniku predchZaznam sa rovna adrese smernika aktualnyZaznam</span><span class="s2"> 
+            aktualnyZaznam=aktualnyZaznam-&gt;dalsia</span><span class="s6">;  </span><span class="s3">//adresa aktualnehoZaznamu sa rovna smerniku dalsia v strukture na ktoru ukazuje smernik aktualnyZaznam</span><span class="s2"> 
+        } 
+    } 
+    printf(</span><span class="s1">&quot;Vymazalo sa %d zaznamov</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">pocet)</span><span class="s6">;  </span><span class="s3">//program vypise na obrazovku pocet vymazanych zaznamov</span><span class="s2"> 
+} 
+</span><span class="s5">void </span><span class="s2">vyhladajUdaje(KNIZNICA *prvyZaznam)            </span><span class="s3">//funkcia s nazvom vyhladajUdaje</span><span class="s2"> 
+{ 
+    KNIZNICA *aktualnyZaznam</span><span class="s6">;   </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">preukaz</span><span class="s6">;                </span><span class="s3">//deklaracia celociselnej premennej preukaz</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">pocet=</span><span class="s4">0</span><span class="s6">;                </span><span class="s3">//deklaracia celociselnej premennej pocet a jej nasledna inicializacia na nula</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">naslo=</span><span class="s4">0</span><span class="s6">;                </span><span class="s3">//deklaracia celociselnej premennej naslo a jej nasledna inicializacia na nula</span><span class="s2"> 
+ 
+    scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;preukaz)</span><span class="s6">;       </span><span class="s3">//nacitanie hodnoty preukaz z klavesnice</span><span class="s2"> 
+    aktualnyZaznam=prvyZaznam</span><span class="s6">;  </span><span class="s3">//adresa smernika aktualnyZaznam sa rovna adrese smernika prvyZaznam</span><span class="s2"> 
+    </span><span class="s5">while</span><span class="s2">(aktualnyZaznam!=NULL) </span><span class="s3">//dokial sa smernik aktualnyZaznam nerovna NULL</span><span class="s2"> 
+    { 
+        </span><span class="s5">if</span><span class="s2">(aktualnyZaznam-&gt;cisloPreukazu==preukaz)  </span><span class="s3">//ak sa hodnota cislaPreukazu danej struktury rovna nacitanemu preukazu</span><span class="s2"> 
+        { 
+            printf(</span><span class="s1">&quot;%d.</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">++pocet)</span><span class="s6">;                            </span><span class="s3">//vypisanie na obrazovku poradia danych struktur</span><span class="s2"> 
+            printf(</span><span class="s1">&quot;signatura: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;signatura)</span><span class="s6">;  </span><span class="s3">//program vypise na obrazovku retazec signaturu v danom zazname</span><span class="s2"> 
+            printf(</span><span class="s1">&quot;isbn: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;ISBN)</span><span class="s6">;            </span><span class="s3">//program vypise na obrazovku retazec ISBN v danom zazname</span><span class="s2"> 
+            printf(</span><span class="s1">&quot;nazov: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;nazovKnihy)</span><span class="s6">;     </span><span class="s3">//program vypise na obrazovku retazec nazovKnihy v danom zazname</span><span class="s2"> 
+            printf(</span><span class="s1">&quot;autori: %s&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;autori)</span><span class="s6">;        </span><span class="s3">//program vypise na obrazovku retazec autori v danom zazname</span><span class="s2"> 
+            printf(</span><span class="s1">&quot;datum: %d</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;datumVypozicania)</span><span class="s6">; </span><span class="s3">//program vypise na obrazovku premennu datum v danom zazname</span><span class="s2"> 
+            printf(</span><span class="s1">&quot;preukaz: %d</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">aktualnyZaznam-&gt;cisloPreukazu)</span><span class="s6">;  </span><span class="s3">//program vypise na obrazovku premennu preukaz v danom zazname</span><span class="s2"> 
+            naslo=</span><span class="s4">1</span><span class="s6">;</span><span class="s2"> 
+        } 
+        aktualnyZaznam=aktualnyZaznam-&gt;dalsia</span><span class="s6">;  </span><span class="s3">//posunutie smernika v spajanom zozname struktur o jedno miesto</span><span class="s2"> 
+    } 
+    </span><span class="s5">if</span><span class="s2">(naslo==</span><span class="s4">0</span><span class="s2">)printf(</span><span class="s1">&quot;Pre dane cislo preukazu neevidujeme vypozicky</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s2">)</span><span class="s6">;  </span><span class="s3">//ak sa nenasla zhoda (neprebehol if) tak program vypise na obrazovku ze nenasiel zhodu</span><span class="s2"> 
+} 
+</span><span class="s5">void </span><span class="s2">zmenUdaje(KNIZNICA *prvyZaznam)                </span><span class="s3">//funkcia s nazvom zmenUdaje</span><span class="s2"> 
+{ 
+    KNIZNICA *aktualnyZaznam=NULL</span><span class="s6">;      </span><span class="s3">//deklaracia smernika na struktury s nazvom aktualnyZaznam</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">pocet=</span><span class="s4">0</span><span class="s6">;                        </span><span class="s3">//deklaracia celociselnej premennej pocet a jej nasledna inicializacia na nulu</span><span class="s2"> 
+    </span><span class="s5">int </span><span class="s2">datum</span><span class="s6">;                          </span><span class="s3">//deklaracia celociselnej premennej datum</span><span class="s2"> 
+ 
+    scanf(</span><span class="s1">&quot;%d&quot;</span><span class="s6">,</span><span class="s2">&amp;datum)</span><span class="s6">;                 </span><span class="s3">//nacitanie hodnoty premennej datum z klavesnice</span><span class="s2"> 
+    aktualnyZaznam=prvyZaznam</span><span class="s6">;          </span><span class="s3">//adrese smernika aktualnyZaznam sa priradi adresa smernika prvyZaznam</span><span class="s2"> 
+    </span><span class="s5">while</span><span class="s2">(aktualnyZaznam!=NULL)         </span><span class="s3">//dokial sa smernik aktualnyZaznam nerovna NULL</span><span class="s2"> 
+    { 
+        </span><span class="s5">if</span><span class="s2">(aktualnyZaznam-&gt;datumVypozicania&lt;=datum) </span><span class="s3">//ak v danej strukture na ktoru ukazuje smernik aktualnyZaznam je velkost cisla datumVypozicania mensi alebo rovny ako zadany datum</span><span class="s2"> 
+        { 
+            aktualnyZaznam-&gt;datumVypozicania+=</span><span class="s4">10000</span><span class="s6">;    </span><span class="s3">//pripocitanie datumuVypocitania hodnotu 10000</span><span class="s2"> 
+            ++pocet</span><span class="s6">;                                    </span><span class="s3">//povysenie premennej pocet o jedna</span><span class="s2"> 
+        } 
+        aktualnyZaznam=aktualnyZaznam-&gt;dalsia</span><span class="s6">;          </span><span class="s3">//posunutie smernika v spajanom zozname struktur o jedno miesto</span><span class="s2"> 
+    } 
+    printf(</span><span class="s1">&quot;Aktualizovalo sa %d zaznamov</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s6">,</span><span class="s2">pocet)</span><span class="s6">;     </span><span class="s3">//program vypise na obrazovku hodnotu premennej pocet teda pocet aktualizovanych zaznamov</span><span class="s2"> 
+} 
+</span><span class="s5">int </span><span class="s2">main()                                          </span><span class="s3">//hlavna funkcia main</span><span class="s2"> 
+{ 
+    FILE *fr</span><span class="s6">;                   </span><span class="s3">//deklaracia suboru na citanie</span><span class="s2"> 
+    KNIZNICA *prvyZaznam=NULL</span><span class="s6">;  </span><span class="s3">//deklaracia smernika prvyZaznam a nasledovna inicializacia ho na NULL</span><span class="s2"> 
+    </span><span class="s5">char </span><span class="s2">znak</span><span class="s6">;                  </span><span class="s3">//deklaracia premennej typu znak</span><span class="s2"> 
+ 
+    </span><span class="s5">while</span><span class="s2">((znak=(</span><span class="s5">char</span><span class="s2">)getchar())!=</span><span class="s1">'k'</span><span class="s2">)          </span><span class="s3">//dokial sa nenacita znak z klavesnice 'k'</span><span class="s2"> 
+    { 
+        </span><span class="s5">switch</span><span class="s2">(znak)    </span><span class="s3">//rozvetvenie programu podla zadaneho vstupu</span><span class="s2"> 
+        { 
+            </span><span class="s5">case</span><span class="s1">'n'</span><span class="s2">:    </span><span class="s3">//ak sa vstup rovna 'n'</span><span class="s2"> 
+            { 
+                </span><span class="s5">if</span><span class="s2">((fr=fopen(FILENAME</span><span class="s6">,</span><span class="s1">&quot;r&quot;</span><span class="s2">))==NULL)  </span><span class="s3">//ak neeexistuje subor na citanie s nazvom kniznica.txt program vypise chybu a vrati hodnotu 1</span><span class="s2"> 
+                { 
+                    printf(</span><span class="s1">&quot;Zaznamy neboli nacitane</span><span class="s6">\n</span><span class="s1">&quot;</span><span class="s2">)</span><span class="s6">;</span><span class="s2"> 
+                    </span><span class="s5">return </span><span class="s4">1</span><span class="s6">;</span><span class="s2"> 
+                } 
+                nacitajUdaje(fr</span><span class="s6">,</span><span class="s2">&amp;prvyZaznam)</span><span class="s6">;   </span><span class="s3">//ak program pokracuje teda neprebehol if main zavola funkciu nacitajUdaje</span><span class="s2"> 
+                </span><span class="s5">if</span><span class="s2">(fclose(fr)==EOF)</span><span class="s5">return </span><span class="s4">1</span><span class="s6">;    </span><span class="s3">//ak sa subor nepodarilo zatvorit program vrati hodnotu 1 a ukonci sa</span><span class="s2"> 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">case</span><span class="s1">'v'</span><span class="s2">:                            </span><span class="s3">//ak sa vstup rovna 'v'</span><span class="s2"> 
+            { 
+                vypisUdaje(prvyZaznam)</span><span class="s6">;         </span><span class="s3">//main zavola funkciu vypisUdajek</span><span class="s2"> 
+ 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">case</span><span class="s1">'p'</span><span class="s2">:                            </span><span class="s3">//ak sa vstup rovna 'p'</span><span class="s2"> 
+            { 
+                pridajUdaje(&amp;prvyZaznam)</span><span class="s6">;       </span><span class="s3">//main zavola funkciu pridajUdaje</span><span class="s2"> 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">case</span><span class="s1">'z'</span><span class="s2">:                            </span><span class="s3">//ak sa vstup rovna 'z'</span><span class="s2"> 
+            { 
+                zmazUdaje(&amp;prvyZaznam)</span><span class="s6">;         </span><span class="s3">//main zavola funkciu zmazUdaje</span><span class="s2"> 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">case</span><span class="s1">'h'</span><span class="s2">:                            </span><span class="s3">//ak sa vstup rovna 'h'</span><span class="s2"> 
+            { 
+                vyhladajUdaje(prvyZaznam)</span><span class="s6">;      </span><span class="s3">//main zavola funkciu vyhladajUdaje</span><span class="s2"> 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">case</span><span class="s1">'a'</span><span class="s2">:                            </span><span class="s3">//ak sa vstup rovna 'a'</span><span class="s2"> 
+            { 
+                zmenUdaje(prvyZaznam)</span><span class="s6">;          </span><span class="s3">//main zavola funkciu zmenUdaje</span><span class="s2"> 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">case</span><span class="s1">'k'</span><span class="s2">:                            </span><span class="s3">//ak sa vstup rovna 'k'</span><span class="s2"> 
+            { 
+                dealokaciaUdaje(&amp;prvyZaznam)</span><span class="s6">;   </span><span class="s3">//main zavola funkciu dealokaciaUdaje</span><span class="s2"> 
+                </span><span class="s5">break</span><span class="s6">;                          </span><span class="s3">//program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+            } 
+            </span><span class="s5">default</span><span class="s2">:</span><span class="s5">break</span><span class="s6">;                      </span><span class="s3">//ak pouzivatel zadal iny znak ako bolo vo volbe program sa vrati na zaciatok switchu a ignoruje ostatne moznosti vstupu</span><span class="s2"> 
+        } 
+    } 
+    </span><span class="s5">return </span><span class="s4">0</span><span class="s6">;                       </span><span class="s3">//ak prebehlo vsetko v poriadku a bol zadany vstup 'k' program sa ukonci</span><span class="s2"> 
+} 
+</span></pre>
+</body>
+</html>
